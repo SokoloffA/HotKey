@@ -1,7 +1,7 @@
 #if !targetEnvironment(macCatalyst) && canImport(AppKit)
 import AppKit
 
-public struct KeyCombo: Equatable {
+public struct KeyCombo: Equatable, Codable {
 
 	// MARK: - Properties
 
@@ -79,6 +79,33 @@ extension KeyCombo: CustomStringConvertible {
         }
 
         return output
+    }
+}
+
+// MARK: - UserDefaults
+
+extension UserDefaults {
+    open func keyCombo(forKey defaultName: String) -> KeyCombo? {
+        guard
+            let data = UserDefaults.standard.string(forKey: defaultName)?.data(using: .utf8),
+            let decoded = try? JSONDecoder().decode(KeyCombo.self, from: data)
+        else {
+            return nil
+        }
+
+        return decoded
+    }
+
+    open func set(_ value: KeyCombo?, forKey defaultName: String) {
+        guard
+            let value = value,
+            let encoded = try? JSONEncoder().encode(value)
+        else {
+            set("", forKey: defaultName)
+            return
+        }
+
+        set(String(data: encoded, encoding: .utf8), forKey: defaultName)
     }
 }
 #endif

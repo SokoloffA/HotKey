@@ -12,7 +12,7 @@ public final class HotKey {
 
 	let identifier = UUID()
 
-	public var keyCombo: KeyCombo {
+	public var keyCombo: KeyCombo? {
         willSet { HotKeysController.unregister(self) }
         didSet { HotKeysController.register(self) }
     }
@@ -31,7 +31,7 @@ public final class HotKey {
 	// MARK: - Initializers
 
     public init() {
-        self.keyCombo = KeyCombo(carbonKeyCode: 0)
+        self.keyCombo = nil
     }
 
 	public init(keyCombo: KeyCombo, keyDownHandler: Handler? = nil, keyUpHandler: Handler? = nil) {

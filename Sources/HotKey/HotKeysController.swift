@@ -42,6 +42,8 @@ final class HotKeysController {
 	// MARK: - Registration
 
 	static func register(_ hotKey: HotKey) {
+        guard let keyCombo = hotKey.keyCombo else { return }
+
         // Don't register an already registered HotKey
         if hotKeys.values.first(where: { $0.identifier == hotKey.identifier }) != nil {
             return
@@ -58,8 +60,8 @@ final class HotKeysController {
 		var eventHotKey: EventHotKeyRef?
 		let hotKeyID = EventHotKeyID(signature: eventHotKeySignature, id: box.carbonHotKeyID)
 		let registerError = RegisterEventHotKey(
-			hotKey.keyCombo.carbonKeyCode,
-			hotKey.keyCombo.carbonModifiers,
+			keyCombo.carbonKeyCode,
+			keyCombo.carbonModifiers,
 			hotKeyID,
 			GetEventDispatcherTarget(),
 			0,
